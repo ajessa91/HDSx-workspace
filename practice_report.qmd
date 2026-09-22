@@ -1,6 +1,6 @@
 ---
 title: "My First Report"
-author: "Your Name"
+author: "Alyssa Jessa"
 format:
   html:
     embed-resources: true
@@ -36,8 +36,14 @@ hist(patients$age,
 
 ## Your turn
 
-- Add a sentence here describing what you notice in the chart.
+- Add a sentence here describing what you notice in the chart
+
+The chart has a slightly left skewed distribution. 
 - Render again and check that both your sentence and the chart appear.
 
 When you are happy with the result, **commit and sync** your work (the Week 2
 course page walks you through this), then submit your repository link on Canvas.
+
+## My notes
+
+In todays class I have leanred what the various types of files we will be using for our assignments. I leanred about **qmd** documents as well as what **html** and **pdf** file are. I also leanred about some basics about rendering documents and how to put our updated documents to the repository. One calculation is 5+5=10. 
