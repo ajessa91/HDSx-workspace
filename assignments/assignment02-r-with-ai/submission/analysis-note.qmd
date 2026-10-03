@@ -8,7 +8,8 @@ format: html
 ```{r}
 #| message: false
 #| warning: false
-library(tidyverse)  # AI-EDIT(2026-06-23): tidyverse-default — consolidated core library() calls into library(tidyverse)
+library(readr)     
+library(dplyr)
 ```
 
 ## Load Data
@@ -31,29 +32,33 @@ colSums(is.na(nhanes))
 Replace this example with your own summary if you choose a different question.
 
 ```{r}
-bmi_summary <- nhanes |>
-  filter(!is.na(BMI), !is.na(IncomeGroup)) |>
-  group_by(IncomeGroup) |>
-  summarise(
-    n = n(),
-    mean_bmi = mean(BMI),
-    .groups = "drop"
-  )
+#I needed to figure out how to filter the data to deal with missing #values using the muatate function. I used AI to check if muatate was #the right function to use. There was also some auto correct with AI #when it came to writing the code. I also needed to check if I was using #filter() correcting and I checked that with AI. I also used AI to #understand what .groups= "drops" meant for and what that line of code #did. 
 
+
+bmi_summary <- nhanes|>
+mutate(has_bmi_income=!is.na(BMI) & !is.na(IncomeGroup))|>
+filter(has_bmi_income)|>
+group_by(IncomeGroup)|>
+summarise(
+  n=n(),
+  mean_bmi = mean(BMI),
+  .groups = "drop"
+)
 bmi_summary
 ```
 
 ## Function
 
 ```{r}
-mean_with_n <- function(x) {
+#changed function(values) so i could understand what we are trying to do #used AI to audit and make sure this was correct for this task number
+mean_and_sd_function <-function(values){
   tibble(
-    n = sum(!is.na(x)),
-    mean = mean(x, na.rm = TRUE)
+    mean=mean(values,na.rm=TRUE),
+    sd=sd(values,na.rm=TRUE)
   )
 }
 
-mean_with_n(nhanes$BMI)
+mean_and_sd_function(nhanes$BMI)
 ```
 
 ## Save Output
@@ -65,4 +70,4 @@ write_csv(bmi_summary, "assignments/assignment02-r-with-ai/submission/output/sum
 
 ## AI Audit Note
 
-Add comments explaining which parts were drafted or debugged with AI and how you verified the result.
+#For this assignment, AI was used to check if I was doing the code correctly and was also used so i could look up what certain code lines meant that was already apart of the starter analysis. For the mutate section needed to change , to & to handle the NA values which AI told me to switch. .groups told me what that did. for function values I wanted to change it so i could write something that helped with my understadning. 
