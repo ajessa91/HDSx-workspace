@@ -4,10 +4,10 @@
 docs/git-audit-note
 
 ## Pull Request URL
-To be added after creating the pull request.
+https://github.com/ajessa91/HDSx-workspace/pull/2
 
-## Commit Hash
-To be added after committing the changes.
+## Orginal Documentation Commit Hash
+7532ac0e8faf5042658381b870fc4e172f4c70a2
 
 ## Description
 This pull request documents a small update to the main README.md. I added my name and a path note directing readers to the Assignment 3 submission folder.
