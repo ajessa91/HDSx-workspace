@@ -1,6 +1,6 @@
 # SPPH 381H — Your Personal Workspace
 
-This is **your** working project for **SPPH 381H: Health Data Science (AI and
+This is **Alyssa Jessa (ajessa91)** working project for **SPPH 381H: Health Data Science (AI and
 Knowledge Translation)**. Fork this repository once, then do your individual
 course work here. The course book is a separate, read-only reference; do not
 copy book source files into this repository unless an assignment explicitly
@@ -76,3 +76,6 @@ it.
 - The practice dataset is **synthetic** — it is not real patient data. **Never
   put real, private, or personal health data in this repository.**
 - Instructor solutions and answer keys are not stored in this repository.
+
+## Assignment 3: Git Collaboration 
+Assignment 3 Git Collaboration can be found in "assignmnets/assignment03-git/submission/"
