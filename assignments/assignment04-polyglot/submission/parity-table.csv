@@ -1,0 +1,6 @@
+metric,r_value,python_value,match,notes
+raw_row_count,105626,105626,TRUE,Same total number of rows
+raw_column_count,18,18,TRUE,Same number of columns
+filtered_row_count,87647,87647,TRUE,Same number of rows after filtering missing values
+number_of_groups,6,6,TRUE,Same six income and gender grouping labels
+rounded_summary_values,6 groups matched,6 groups matched,TRUE,All six groups match in labels counts mean BMI and SD BMI rounded to two decimal places

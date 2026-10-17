@@ -1,0 +1,18 @@
+Assignment 4 Dependency Note 
+R: 
+tidyverse: this function uses a collection of R packages which is used to import, clean, organize, and analyze the NHANES dataset.
+readr: Uses read_csv() to load the NHANES CSV file into R.
+dplyr: Uses filter() to remove missing BMI, IncomeGroup, and Gender values and group_by() to organize observations by income and gender, then the summarise() to calculate grouped BMI statistics, and arrange() to sort the results.
+Base R: Uses mean() and sd() to calculate BMI statistics, round() to round results to two decimal places, is.na() to identify missing values, and nrow() and ncol() to verify dataset dimensions.
+Python: 
+pandas: Used to reproduce the R analysis in Python.
+read_csv() loads the NHANES dataset.
+dropna() removes observations with missing values.
+groupby() organizes observations by IncomeGroup and Gender.
+agg() calculates group counts, mean BMI, and standard deviations.
+round() rounds results to two decimal places.
+ipykernel: Provides the Python kernel used to execute the code cells in translation.ipynb.
+helpers.py: this contained  the reusable summarize_mean_sd() function. The function is imported and called in translation.ipynb to reproduce the grouped BMI summary.
+
+Both R and Python use the same NHANES dataset, missing-value filters, grouping variables, and summary calculations. Relative file paths allow the analyses to access the dataset within the repository.
+The parity table confirms that both languages produce matching row counts, grouping labels, and BMI statistics rounded to two decimal places.
