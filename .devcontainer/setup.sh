@@ -19,14 +19,34 @@ Rscript -e '
   cat("R extras present:", paste(have, collapse = ", "), "\n")
 '
 
-# 🤖 AI edit (Claude), 2026-09-29: this block and the sess self-test line.
-# sess connects R terminals to the VS Code R extension (v3+), which is how plots
-# and View() reach the editor. Without it, plots silently go to Rplots.pdf. It is
-# not on CRAN yet, and pre-installing it saves students an install prompt.
-echo "==> Installing sess (sends plots from R to VS Code)..."
+# 🤖 AI edit (Claude), 2026-09-29, revised 2026-10-20: this block and the sess
+# self-test line.
+# sess connects R terminals to the VS Code R extension, which is how plots and
+# View() reach the editor. vscode-R 3.2+ accepts only the sess built from its own
+# release. Any other copy gets an easily missed "Install bundled sess" pop-up,
+# and until someone clicks it, plots silently go to Rplots.pdf. r-universe builds
+# from vscode-R's main branch, which drifts from the release, so install the copy
+# inside the pinned release file. When bumping "REditorSupport.r@..." in
+# devcontainer.json, bump VSCODE_R_VERSION and its checksum (sha256sum of the
+# release's r-<version>.vsix) here too.
+export VSCODE_R_VERSION=3.2.0
+export VSCODE_R_SHA256=fbfd1dad22c5ab696750d201d4732ce30c032f22265d4efe2b220eb4361efd1e
+echo "==> Installing sess from vscode-R ${VSCODE_R_VERSION} (sends plots from R to VS Code)..."
 Rscript -e '
-  if (!requireNamespace("sess", quietly = TRUE))
-    install.packages("sess", repos = c("https://reditorsupport.r-universe.dev", "https://cloud.r-project.org"))
+  version <- Sys.getenv("VSCODE_R_VERSION")
+  vsix <- tempfile(fileext = ".vsix")
+  download.file(sprintf("https://github.com/REditorSupport/vscode-R/releases/download/v%s/r-%s.vsix",
+                        version, version), vsix, mode = "wb", quiet = TRUE)
+  stopifnot("vscode-R release file failed its checksum" =
+              tools::sha256sum(vsix) == Sys.getenv("VSCODE_R_SHA256"))
+  bundled <- "extension/dist/resources/sess/"
+  unzip(vsix, files = grep(paste0("^", bundled), unzip(vsix, list = TRUE)$Name, value = TRUE),
+        exdir = tempdir())
+  pkg <- file.path(tempdir(), bundled)
+  imports <- strsplit(read.dcf(file.path(pkg, "DESCRIPTION"), "Imports"), ",")[[1]]
+  need <- setdiff(trimws(sub("[(].*", "", imports)), rownames(installed.packages()))
+  if (length(need)) install.packages(need, repos = "https://cloud.r-project.org")
+  install.packages(pkg, repos = NULL, type = "source")
 '
 
 echo "==> Installing Python packages (Week 5 polyglot / reticulate demo)..."
@@ -39,7 +59,7 @@ echo "-- R --";       R --version | head -n 1
 echo "-- Quarto --";  quarto --version
 echo "-- Python --";  python3 --version
 echo "-- pandas --";  python3 -c "import pandas as pd; print('pandas', pd.__version__)" || echo "pandas NOT available"
-echo "-- sess --";    Rscript -e 'cat("sess", format(packageVersion("sess")), "\n")' 2>/dev/null || echo "sess NOT available (plots will not show in VS Code)"
+echo "-- sess --";    Rscript -e 'cat("sess", format(packageVersion("sess")), packageDescription("sess", fields = "Config/vscode-R/source-revision"), "\n")' 2>/dev/null || echo "sess NOT available (plots will not show in VS Code)"
 echo ""
 echo "-- quarto check (verifies R + Python + Jupyter integration) --"
 quarto check || true
