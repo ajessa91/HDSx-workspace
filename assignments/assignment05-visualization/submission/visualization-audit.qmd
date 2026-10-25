@@ -1,6 +1,7 @@
 ---
 title: "Assignment 05: Visualization"
 author: "Alyssa Jessa"
+format: html
 ---
 
 ```{r}
@@ -8,10 +9,68 @@ library(tidyverse)
 ```
 
 ```{r}
+# Verified: Checked the rendered graph, group labels, and axis scale.
+
 nhanes <- read_csv("examples/nhanes-equity/data/nhanes_equity_v6.csv", show_col_types = FALSE)
 nhanes
 ```
 
 ```{r}
+bmi_summary <- nhanes |>
+  filter(
+    !is.na(BMI),
+    !is.na(IncomeGroup),
+    !is.na(Cycle),
+    !is.na(Age),
+    Age >= 20,
+    Age <= 80
+  ) |>
+  group_by(Cycle, IncomeGroup) |>
+  summarise(
+    n = n(),
+    mean_bmi = mean(BMI),
+    .groups = "drop"
+  ) |>
+  filter(n >= 30)
 
+bmi_summary
 ```
+```{r}
+# Verified: Pending visual checks of axis scale, labels, and group representation.
+#AI:Needed to fix errors in ggplot code. 
+
+corrected_plot <- ggplot(
+  bmi_summary,
+  aes(x = Cycle, y = mean_bmi, color = IncomeGroup, group = IncomeGroup)
+) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2.5) +
+  expand_limits(y = 0) +
+  labs(
+    title = "Mean BMI by Income Group Across NHANES Cycles",
+    subtitle = "Adults aged 20–80 in the classroom dataset",
+    x = "NHANES Cycle",
+    y = "Mean BMI",
+    color = "Income Group",
+    caption = "Descriptive and unweighted NHANES classroom data; not a population estimate."
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+
+corrected_plot
+
+ggsave(
+  "assignments/assignment05-visualization/submission/corrected-plot.png",
+  plot = corrected_plot,
+  width = 9,
+  height = 6,
+  dpi = 300
+)
+```
+
+## Visualization Audit and Revision
+The original flawed visualization contained a few misleading design choices. It displayed only the first and last NHANES cycles while claiming BMI increased steadily across every cycle. It also used a restricted y-axis from 24 to 28, which could exaggerate differences between income groups. The title implied that low income causes obesity, although the data cannot establish causation.
+I revisedsed the visualization to include all available NHANES cycles, use a y-axis that includes zero, and provide neutral labels describing mean BMI by income group. I also restricted the analysis to adults aged 20–80, excluded missing observations, and retained groups with at least 30 observations. The revised graph is a descriptive unweighted summary of the classroom dataset and should not be interpreted as a causal relationship or population estimate.
