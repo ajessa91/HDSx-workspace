@@ -1,0 +1,17 @@
+---
+title: "Assignment 05: Visualization"
+author: "Alyssa Jessa"
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+nhanes <- read_csv("examples/nhanes-equity/data/nhanes_equity_v6.csv", show_col_types = FALSE)
+nhanes
+```
+
+```{r}
+
+```
