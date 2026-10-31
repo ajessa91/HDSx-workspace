@@ -1,0 +1,104 @@
+---
+Title: "Assignment 6: EDA and Table 1"
+Author: "Alyssa Jessa"
+format: html
+---
+
+## Analysis Overview
+This analysis uses the prepared NHANES Health Equity classroom dataset to summarize BMI and age across income groups.
+```{r}
+library(tidyverse)
+library(knitr)
+
+# AI Use: Help adapt the worked example to load dates (nhanes css)using relative paths.
+# Verified: Check that the CSV loads successfully in Codespaces.
+
+candidate_paths <- c(
+  "examples/nhanes-equity/data/nhanes_equity_v6.csv",
+  "../../examples/nhanes-equity/data/nhanes_equity_v6.csv",
+  "../../../examples/nhanes-equity/data/nhanes_equity_v6.csv"
+)
+
+data_path <- candidate_paths[file.exists(candidate_paths)][1]
+
+if (is.na(data_path)) {
+  stop("Could not find nhanes_equity_v6.csv")
+}
+
+nhanes <- read_csv(data_path, show_col_types = FALSE)
+head(nhanes)
+#added to check code and headed 6 rows 
+```
+
+## Analysis Cohort
+
+The cohort includes adults ages 20-80, inclusive. Records outside this age range or with missing age are excluded before summarizing results.
+
+```{r}
+#| label: cohort
+# Verified: Check that the age filter is inclusive and the counts match the output.
+
+analysis_df <- nhanes |>
+  filter(Age >= 20, Age <= 80)
+
+cohort_counts <- tibble(
+  step = c("Prepared CSV rows", "Rows after age 20-80 restriction"),
+  n = c(nrow(nhanes), nrow(analysis_df))
+)
+
+kable(cohort_counts)
+```
+
+## Missingness
+
+Missingness is checked before creating Table 1. The variables checked are BMI, Age, IncomeGroup, Gender, Race, and Cycle.
+
+```{r}
+#| label: missingness
+
+# AI use: Help edit to vapply(analysis_df[key_vars], function(x) sum(is.na(x)), numeric(1)), as I was unaware of how to do this. 
+# Verified: Check that missing percentages use the age restricted cohort as the denominator.
+
+key_vars <- c("BMI", "Age", "IncomeGroup", "Gender", "Race", "Cycle")
+
+missingness <- tibble(variable = key_vars) |>
+  mutate(
+    missing_n = vapply(analysis_df[key_vars], function(x) sum(is.na(x)), numeric(1)),
+    missing_percent = round(100 * missing_n / nrow(analysis_df), 1)
+  )
+
+kable(missingness)
+```
+
+## Table 1: Descriptive Summary by Income Group
+
+Records with missing IncomeGroup are excluded from Table 1. Missing BMI values are excluded from BMI calculations using na.rm = TRUE. The group N counts all records with a nonmissing IncomeGroup, including records with missing BMI.
+
+```{r}
+#| label: table1
+
+# AI use: helped edit code conditions to run a successful table
+# Verified: Compare the group counts and statistics with the worked example.
+
+mean_sd <- function(x) {
+  sprintf("%.1f (%.1f)", mean(x, na.rm = TRUE), sd(x, na.rm = TRUE))
+}
+
+table1 <- analysis_df |>
+  filter(!is.na(IncomeGroup)) |>
+  group_by(IncomeGroup) |>
+  summarise(
+    N = n(),
+    `BMI, mean (SD)` = mean_sd(BMI),
+    `Age, mean (SD)` = mean_sd(Age),
+    .groups = "drop"
+  )
+
+kable(table1)
+
+write_csv(table1, "assignments/assignment06-eda-ai-audit/submission/table1.csv")
+```
+
+## Methods Note
+
+Analyzed and  prepared the NHANES Health Equity classroom CSV snapshot. The analysis cohort included records with ages 20-80, which are inclusive. Missingness was checked before summarizing results. Records with missing Income Group were excluded from Table 1, while missing BMI values were excluded from BMI calculations. Also smmarized N, BMI mean SD, and age mean SD by income group using unweighted descriptive statistics. These results describe the prepared classroom dataset only and should not be interpreted as causal effects or population estimates.

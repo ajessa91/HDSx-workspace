@@ -1,0 +1,2 @@
+# Provenance and Stewardship Note	
+	The dataset used in this analysis is the prepared NHANES Health Equity classroom CSV snapshot. The original data comes from the CDC National Health and Nutrition Examination Survey (NHANES) public use files. The dataset was accessed through the course GitHub repository using the file examples/nhanes-equity/data/nhanes_equity_v6.csv. The dataset is used for coursework learning and descriptive analysis not for making population based or causal claims. To protect privacy row level data should not be shared with external AI tools or websites. 
