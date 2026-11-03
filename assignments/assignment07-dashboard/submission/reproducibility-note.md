@@ -1,0 +1,2 @@
+## Reproducibility Note
+I rendered the dashboard in VS Code by selecting >Quarto: Render Document  -> Render HTML. The dashboard uses the prepared NHANES classroom dataset located at examples/nhanes-equity/data/nhanes_equity_v6.csv. I successfully rendered the dashboard using both Low Income (<1.3) and High Income (>3.5). I then returned to Low Income for the final version. The dashboard can also render in a fresh Codespace as long as the required dataset and R packages are included.
